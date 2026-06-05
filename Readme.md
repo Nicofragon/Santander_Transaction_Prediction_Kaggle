@@ -1,8 +1,28 @@
-# Santander Customer Transaction Prediction
-### Can you identify who will make a transaction?
+# Santander Customer Transaction Prediction (Kaggle)
 
-In this challenge, we invite Kagglers to help us identify which customers will make a specific transaction in the future, irrespective of the amount of money transacted. The data provided for this competition has the same structure as the real data we have available to solve this problem.
+Binary classification on Santander's anonymized banking dataset: predict which
+customers will make a specific transaction in the future. Gradient-boosted trees
+(LightGBM) on 200 anonymized features, optimized for ROC-AUC.
 
-Submissions are evaluated on area under the ROC curve between the predicted probability and the observed target.
+## Approach
+- **Data:** 200,000 rows × 200 anonymized numeric features (`var_0`…`var_199`);
+  heavily imbalanced target (≈90% / 10%).
+- **EDA:** null check, target balance, per-feature distributions and correlations.
+- **Baseline:** `SGDClassifier` (log loss) on standardized features, tuned with
+  `RandomizedSearchCV` (CV ROC-AUC ≈ 0.86).
+- **Model:** `LightGBM` (`LGBMClassifier`, gradient boosting), hyper-parameters
+  tuned with Bayesian optimization (`BayesSearchCV`, 3-fold stratified CV).
+- **Validation:** 70/30 train/validation hold-out, metric = ROC-AUC.
 
-Challenge: https://www.kaggle.com/competitions/santander-customer-transaction-prediction/overview/evaluation
+## Results
+- Tuned LightGBM: **validation ROC-AUC ≈ 0.91** (default LightGBM ≈ 0.885).
+- Generates `lgb_submission.csv` for the Kaggle leaderboard.
+- *(No final leaderboard rank is recorded in this repo — the reported score is
+  the local validation ROC-AUC.)*
+
+## Stack
+Python · pandas · NumPy · scikit-learn · LightGBM · scikit-optimize · seaborn/matplotlib
+
+> _(2021–22, Kaggle-era project — my production work since lives in private client repos.)_
+
+Challenge: https://www.kaggle.com/competitions/santander-customer-transaction-prediction
